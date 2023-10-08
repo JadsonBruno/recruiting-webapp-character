@@ -86,3 +86,5 @@ Character sheets are defined by the following high-level concepts
       - If the skill check is successful or a failure
 10. Add a party skill check section. This is the same as the above, except we should use the character with the highest skill total to attempt the action
   - Show which character was selected to attempt the action
+
+Starting chalenge
