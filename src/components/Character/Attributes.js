@@ -7,20 +7,24 @@ function Attributes({character, setCharacterData}) {
       return (Math.floor(attributeValue / 2)) - 5;
     }
 
+    const handleUpdateAttributeValues = (attributeName, newAttributeValue) => {
+      const newCharacterData = {
+        ...character,
+        attributes: {
+          ...character.attributes,
+          [attributeName]: {value: newAttributeValue, modifier: calculateModifier(newAttributeValue)}
+        }
+      }
+
+      setCharacterData(newCharacterData);
+    }
+
     const handleIncrementAttribute = attributeName => {
       const totalAttributePoints = Object.values(character.attributes).reduce((acc, attribute) => acc + attribute.value, 0);
 
       if (totalAttributePoints < MAXIMUM_ATTRIBUTE_POINTS) {
         const newAttributePoint = character.attributes[attributeName].value + 1;
-        const newCharacterData = {
-          ...character,
-          attributes: {
-            ...character.attributes,
-            [attributeName]: {value: newAttributePoint, modifier: calculateModifier(newAttributePoint)}
-          }
-        }
-
-        setCharacterData(newCharacterData);
+        handleUpdateAttributeValues(attributeName, newAttributePoint);
       } else {
         alert('A Character can have up to 70 Delegated Attribute Points');
       }
@@ -29,15 +33,7 @@ function Attributes({character, setCharacterData}) {
     const handleDecrementAttribute = attributeName => {
       if (character.attributes[attributeName].value > 0) {
         const newAttributePoint = character.attributes[attributeName].value - 1;
-        const newCharacterData = {
-          ...character,
-          attributes: {
-            ...character.attributes,
-            [attributeName]: {value: newAttributePoint, modifier: calculateModifier(newAttributePoint)}
-          }
-        }
-
-        setCharacterData(newCharacterData);
+        handleUpdateAttributeValues(attributeName, newAttributePoint);
       }
     };
 
