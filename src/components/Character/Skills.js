@@ -3,25 +3,30 @@ import { SKILL_LIST } from '../../consts.js';
 function Skills({character, setCharacterData}) {
     const maximumTotalPoints = 10 + (4 * character.attributes['Intelligence'].modifier);
 
+    const updateSkillValues = (skillName, nextValue, nextTotal) => {
+        const currentSkill = character.skills[skillName];
+        const skillModifier = character.skills[skillName].attributeModifier;
+
+        const updatedSkills = { ...character.skills };
+        updatedSkills[skillName] = {
+            value: currentSkill.value + nextValue,
+            attributeModifier: skillModifier,
+            total: currentSkill.total + nextTotal,
+        };
+
+        setCharacterData({
+            ...character,
+            skills: updatedSkills,
+        });
+    };
+
     const handleIncrementSkill = skillName => {
         const totalSkillsPoints = Object.values(character.skills).reduce((acc, skill) => acc + skill.value, 0);
 
         if (totalSkillsPoints < maximumTotalPoints) {
-            const currentSkill = character.skills[skillName];
             const skillModifier = character.skills[skillName].attributeModifier;
             const skillModifierValue = character.attributes[skillModifier].modifier;
-    
-            const updatedSkills = { ...character.skills };
-            updatedSkills[skillName] = {
-                value: currentSkill.value + 1,
-                attributeModifier: skillModifier,
-                total: currentSkill.total + 1 + skillModifierValue,
-            };
-
-            setCharacterData({
-                ...character,
-                skills: updatedSkills,
-            });
+            updateSkillValues(skillName, 1, 1 + skillModifierValue);
             return;
         }
 
@@ -30,20 +35,9 @@ function Skills({character, setCharacterData}) {
 
     const handleDecrementSkill = skillName => {
         const currentSkill = character.skills[skillName];
-        const skillModifier = character.skills[skillName].attributeModifier;
 
         if (currentSkill.value > 0) {
-            const updatedSkills = { ...character.skills };
-            updatedSkills[skillName] = {
-                value: currentSkill.value - 1,
-                attributeModifier: skillModifier,
-                total: currentSkill.total - 1,
-            };
-
-            setCharacterData({
-                ...character,
-                skills: updatedSkills,
-            });
+            updateSkillValues(skillName, -1, -1);
             return;
         }
 
